@@ -746,62 +746,7 @@ if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
         </div>
       </div>
     </div>
-    <script>
-      const ACCUWEATHER_API_KEY = "zpka_40a921a6559b4b87a5e5c907378db396_9cc27156";
-      const LOCATION_KEY = "305739";
-
-      const BASE_URL_CURRENT = "http://localhost/rekduit/dashboard/fetch_weather.php";
-
-      function mapIcon(iconCode) {
-        if (iconCode >= 1 && iconCode <= 5) return 'ti ti-sun-high';
-        if (iconCode >= 6 && iconCode <= 11) return 'ti ti-cloud';
-        if (iconCode >= 12 && iconCode <= 18) return 'ti ti-cloud-rain';
-        if (iconCode >= 19 && iconCode <= 29) return 'ti ti-cloud-snow';
-        if (iconCode >= 33 && iconCode <= 38) return 'ti ti-moon-stars';
-        if (iconCode >= 39 && iconCode <= 44) return 'ti ti-cloud-rain';
-        return 'ti ti-help';
-      }
-
-      async function fetchWeather() {
-        try {
-          const response = await fetch(BASE_URL_CURRENT);
-          if (!response.ok) {
-            throw new Error(`Gagal memuat. Periksa kuota API (Status: ${response.status}).`);
-          }
-          const data = await response.json();
-
-          if (!data || data.length === 0) {
-            throw new Error("Data cuaca kosong.");
-          }
-
-          const weather = data[0];
-          const now = new Date(weather.LocalObservationDateTime);
-          const dayOptions = {
-            weekday: 'long'
-          };
-
-
-          document.getElementById('cuaca-hari').textContent = now.toLocaleDateString('id-ID', dayOptions);
-          document.getElementById('cuaca-suhu').textContent = Math.round(weather.Temperature.Metric.Value);
-          document.getElementById('cuaca-ikon').className = mapIcon(weather.WeatherIcon);
-          document.getElementById('detail-angin').textContent = `${weather.Wind.Speed.Metric.Value} km/j ${weather.Wind.Direction.Localized}`;
-          document.getElementById('detail-kelembaban').textContent = `${weather.RelativeHumidity}%`;
-          document.getElementById('detail-tekanan').textContent = `${weather.Pressure.Metric.Value} hPa`;
-          document.getElementById('detail-awan').textContent = `${weather.CloudCover}%`;
-          document.getElementById('detail-sunrise').textContent = 'Perlu API Daily Forecasts';
-          document.getElementById('perkiraan-perjam').innerHTML = '<li class="col">Prakiraan per jam memerlukan API Hourly Forecasts</li>';
-
-        } catch (error) {
-          console.error("Terjadi kesalahan:", error);
-          document.getElementById('cuaca-hari').textContent = "ERROR API";
-          document.getElementById('cuaca-suhu').textContent = '—';
-          document.getElementById('cuaca-ikon').className = 'ti ti-alert-triangle';
-          document.getElementById('detail-angin').textContent = `Kesalahan: ${error.message}`;
-        }
-      }
-
-      fetchWeather();
-    </script>
+    
     <script src="./assets/libs/jquery/dist/jquery.min.js"></script>
     <script src="./assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="./assets/js/sidebarmenu.js"></script>
