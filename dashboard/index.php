@@ -692,57 +692,7 @@ if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
           </div>
           <div class="col-lg-6">
             <div class="card">
-              <div class="card-body">
-                <div class="d-flex align-items-center">
-                  <h4 class="card-title mb-0">Laporan Cuaca (Live)</h4>
-                  <select class="form-select w-auto ms-auto" id="select-periode">
-                    <option selected="" value="today">Hari Ini</option>
-                    <option value="weekly">Mingguan</option>
-                  </select>
-                </div>
-
-                <div class="d-flex align-items-center flex-row mt-4">
-                  <div class="p-2 display-5 text-primary">
-                    <i id="cuaca-ikon" class="ti ti-rotate-clockwise-2"></i>
-                    <span id="cuaca-suhu">--</span>
-                    <sup id="cuaca-satuan">°C</sup>
-                  </div>
-                  <div class="p-2">
-                    <h3 class="mb-0" id="cuaca-hari">Memuat...</h3>
-                    <small id="cuaca-lokasi">Condongcatur, Sleman, Yogyakarta</small>
-                  </div>
-                </div>
-
-                <hr />
-
-                <table class="table table-borderless">
-                  <tbody>
-                    <tr>
-                      <td>Angin</td>
-                      <td class="fw-medium" id="detail-angin">--</td>
-                    </tr>
-                    <tr>
-                      <td>Kelembaban</td>
-                      <td class="fw-medium" id="detail-kelembaban">--</td>
-                    </tr>
-                    <tr>
-                      <td>Tekanan</td>
-                      <td class="fw-medium" id="detail-tekanan">--</td>
-                    </tr>
-                    <tr>
-                      <td>Tutupan Awan</td>
-                      <td class="fw-medium" id="detail-awan">--</td>
-                    </tr>
-                    <tr>
-                      <td>Sunrise/Sunset</td>
-                      <td class="fw-medium" id="detail-sunrise">--</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-          </div>
+            
         </div>
       </div>
     </div>
