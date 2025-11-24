@@ -7,11 +7,11 @@ if (session_status() == PHP_SESSION_NONE) {
 
 // 1. Ambil Kredensial dari Railway Environment Variables (ENV)
 // Jika ENV tidak ditemukan (misalnya saat di local), gunakan nilai default (local)
-$hostname = getenv('MYSQL_HOST') ?: 'localhost'; 
-$username = getenv('MYSQL_USER') ?: 'root'; 
-$password = getenv('MYSQL_PASSWORD') ?: '';
+$hostname = getenv('MYSQLHOST') ?: 'localhost'; 
+$username = getenv('MYSQLUSER') ?: 'root'; 
+$password = getenv('MYSQLPASSWORD') ?: '';
 $database = getenv('MYSQL_DATABASE') ?: 'eventplanner'; 
-$port     = getenv('MYSQL_PORT') ?: 3306; // Ambil port, default 3306
+$port     = getenv('MYSQLPORT') ?: 3306; // Ambil port, default 3306
 
 // 2. Buat Koneksi
 // Tambahkan $port sebagai parameter kelima
