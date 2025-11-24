@@ -155,13 +155,7 @@ if (isset($_GET['event_id']) && is_numeric($_GET['event_id'])) {
                                                             <?php echo htmlspecialchars($pengeluaran['status_pembayaran']); ?>
                                                         </span>
                                                     </td>
-                                                    <td class="text-center">
-                                                        <a href="hapus_pengeluaran.php?id=<?php echo $pengeluaran['id_pengeluaran']; ?>"
-                                                            class="btn btn-sm btn-danger"
-                                                            onclick="return confirm('Yakin ingin menghapus pengeluaran ini: <?php echo htmlspecialchars($pengeluaran['keterangan']); ?>?');">
-                                                            <i class="ti ti-trash me-1"></i> Hapus
-                                                        </a>
-                                                    </td>
+                                                        
                                                     <td class="text-center">
                                                         <a href="edit_pengeluaran.php?id=<?php echo $pengeluaran['id_pengeluaran']; ?>"
                                                             class="btn btn-sm btn-warning me-1">
