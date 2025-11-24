@@ -20,7 +20,7 @@ if ($conn->connect_error) {
 
 $conn->set_charset("utf8mb4");
 
-function redirectIfLoggedIn($location = 'dashboard.php') {
+function redirectIfLoggedIn($location = 'dashboard/index.php') {
     if (isset($_SESSION['user_id'])) {
         header("Location: $location");
         exit;

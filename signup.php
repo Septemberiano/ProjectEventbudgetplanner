@@ -79,7 +79,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <div class="login-main-container">
         <div class="image-section">
-            <img src="assets/images/signup.svg" alt="Sign Up Illustration">
+           <img src="assets/images/signup.svg" alt="Sign Up Illustration" style="width: 900px;">
+            <img src="assets/images/logoreka.PNG" alt="logo rekaduit" style="position: absolute; bottom: 20px; margin-left: -100px; width: 200px; margin-bottom: 80px;">
         </div>
         
         <div class="form-section">
