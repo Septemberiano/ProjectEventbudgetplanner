@@ -1,0 +1,120 @@
+ body, html {
+            height: 100%; 
+            margin: 0;
+            padding: 0;
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            background-color: #ffffff; /* Latar belakang abu-abu muda */
+        }
+
+        .login-main-container {
+            display: flex;
+            background-color: #fff; 
+            max-width: 950px; 
+            width: 90%; 
+            min-height: 550px; 
+        }
+        
+        .image-section {
+            flex: 1; 
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff; /* Warna latar belakang gambar Anda */
+        }
+        .image-section img {
+            max-width: 90%; 
+            height: auto;
+            display: block;
+        }
+
+        .form-section {
+            flex: 1; 
+            padding: 60px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background-color: #ffffff; 
+        }
+        .form-section h2 {
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 40px;
+            font-size: 2.2rem;
+            text-align: center; 
+        }
+        
+        .form-control {
+            border-radius: 8px;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+        }
+        .form-control:focus {
+            border-color: #63e0ff;
+            box-shadow: none; 
+        }
+        .btn-custom-primary {
+            background-color: #63e0ff; 
+            border-color: #63e0ff;
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 8px;
+        }
+        .btn-custom-primary:hover {
+            background-color: #4acbe0; 
+            border-color: #4acbe0;
+            color: #fff;
+        }
+        .form-text-link {
+            color: #007bff; 
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .form-check-input:checked {
+            background-color: #63e0ff;
+            border-color: #63e0ff;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .image-section {
+                flex: 0 0 40%; 
+            }
+            .form-section {
+                flex: 0 0 60%; 
+                padding: 40px;
+            }
+        }
+        @media (max-width: 768px) {
+            body, html {
+                height: auto; 
+                display: block; 
+                background-color: #ffffff; 
+            }
+            .login-main-container {
+                flex-direction: column; 
+                max-width: 100%; 
+                width: 100%;
+                min-height: auto; 
+            }
+            .image-section {
+                /* HAPUS display: none; */
+                height: 200px; /* Atur tinggi gambar agar tidak terlalu besar di mobile */
+                padding: 20px; /* Padding lebih kecil di mobile */
+                background-color: #ffffff; /* Warna latar belakang gambar tetap ada */
+            }
+            .image-section img {
+                max-width: 70%; /* Gambar sedikit lebih kecil di mobile */
+            }
+            .form-section {
+                width: 100%;
+                padding: 30px 20px; 
+            }
+            .form-section h2 {
+                font-size: 1.8rem; 
+                margin-bottom: 25px;
+            }
+        }
