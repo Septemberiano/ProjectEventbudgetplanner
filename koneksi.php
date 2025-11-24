@@ -1,26 +1,44 @@
 <?php
-// Pastikan file ini disimpan sebagai UTF-8 TANPA BOM
-// Gunakan getenv() untuk mengambil variabel lingkungan dari Railway
-$servername = getenv('MYSQL_HOST');
-$username   = getenv('MYSQL_USER');
-$password   = getenv('MYSQL_PASSWORD');
-$database   = getenv('MYSQL_DATABASE');
-$port       = getenv('MYSQL_PORT'); // Port unik dari Railway
 
-// 1. Lakukan Koneksi
-// Penting: Kita perlu memasukkan $port sebagai parameter tambahan
-$conn = new mysqli($servername, $username, $password, $database, $port);
+// Pastikan session_start() adalah hal pertama yang dijalankan jika belum dimulai
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
-// 2. Penanganan Error Koneksi
+// 1. Ambil Kredensial dari Railway Environment Variables (ENV)
+// Jika ENV tidak ditemukan (misalnya saat di local), gunakan nilai default (local)
+$hostname = getenv('MYSQL_HOST') ?: 'localhost'; 
+$username = getenv('MYSQL_USER') ?: 'root'; 
+$password = getenv('MYSQL_PASSWORD') ?: '';
+$database = getenv('MYSQL_DATABASE') ?: 'eventplanner'; 
+$port     = getenv('MYSQL_PORT') ?: 3306; // Ambil port, default 3306
+
+// 2. Buat Koneksi
+// Tambahkan $port sebagai parameter kelima
+$conn = new mysqli($hostname, $username, $password, $database, $port);
+
+// 3. Cek Koneksi
 if ($conn->connect_error) {
-    // Catat error di log Railway, jangan tampilkan ke user
-    error_log("Koneksi database gagal: " . $conn->connect_error);
-    
-    // Tampilkan pesan umum ke user
-    die("Koneksi database gagal. Silakan hubungi administrator.");
+    // Di lingkungan produksi (Railway), lebih aman menampilkan pesan umum
+    // dan mencatat error detail ke log server.
+    error_log("Koneksi Database Gagal: " . $conn->connect_error);
+    die("Koneksi Database Gagal. Silakan coba sebentar lagi.");
 }
 
 $conn->set_charset("utf8mb4");
 
+// 4. Fungsi-fungsi Bawaan (Tetap sama)
+function redirectIfLoggedIn($location = 'dashboard/index.php') {
+    if (isset($_SESSION['user_id'])) {
+        header("Location: $location");
+        exit;
+    }
+}
 
+function redirectIfNotLoggedIn($location = 'login.php') {
+    if (!isset($_SESSION['user_id'])) {
+        header("Location: $location");
+        exit;
+    }
+}
 ?>
