@@ -1,49 +1,38 @@
 <?php
 
-
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-
-    $identifier = trim($_POST["identifier"]);
-    $password   = $_POST["password"];
-
-    // Tentukan apakah input berupa email atau username
-    if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
-
-        // ----- INPUT ADALAH EMAIL -----
-        $stmt = $conn->prepare("SELECT id, username, email, password 
-                                FROM users 
-                                WHERE email = ?");
-        $stmt->bind_param("s", $identifier);
-
-    } else {
-
-        // ----- INPUT ADALAH USERNAME -----
-        $stmt = $conn->prepare("SELECT id, username, email, password 
-                                FROM users 
-                                WHERE username = ?");
-        $stmt->bind_param("s", $identifier);
-    }
-
-    // Eksekusi
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    // Cek hasil
-    if ($result->num_rows === 1) {
-        $row = $result->fetch_assoc();
-
-        if (password_verify($password, $row['password'])) {
-            $_SESSION["user_id"] = $row['id'];
-            header("Location: dashboard/index.php");
-            exit;
-        } else {
-            echo "Password salah";
-        }
-
-    } else {
-        echo "Username / Email tidak ditemukan";
-    }
-
-    $stmt->close();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
 }
-?>
+
+// Ambil kredensial DB dari Railway
+$hostname = getenv('MYSQLHOST') ?: 'localhost';
+$username = getenv('MYSQLUSER') ?: 'root';
+$password = getenv('MYSQLPASSWORD') ?: '';
+$database = getenv('MYSQLDATABASE') ?: 'eventplanner';
+$port     = getenv('MYSQLPORT') ?: 3306;
+
+// Buat koneksi
+$conn = new mysqli($hostname, $username, $password, $database, $port);
+
+// Cek koneksi
+if ($conn->connect_error) {
+    error_log("Koneksi Database Gagal: " . $conn->connect_error);
+    die("Koneksi Database Gagal.");
+}
+
+$conn->set_charset("utf8mb4");
+
+// Fungsi redirect
+function redirectIfLoggedIn($location = 'dashboard/index.php') {
+    if (isset($_SESSION['user_id'])) {
+        header("Location: $location");
+        exit;
+    }
+}
+
+function redirectIfNotLoggedIn($location = 'login.php') {
+    if (!isset($_SESSION['user_id'])) {
+        header("Location: $location");
+        exit;
+    }
+}
