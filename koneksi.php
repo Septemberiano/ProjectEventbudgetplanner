@@ -5,11 +5,11 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 
 // Ambil kredensial DB dari Railway
-$hostname = getenv('MYSQLHOST') ?: 'localhost';
-$username = getenv('MYSQLUSER') ?: 'root';
-$password = getenv('MYSQLPASSWORD') ?: '';
-$database = getenv('MYSQLDATABASE') ?: 'eventplanner';
-$port     = getenv('MYSQLPORT') ?: 3306;
+$hostname = getenv('MYSQLHOST');
+$username = getenv('MYSQLUSER');
+$password = getenv('MYSQLPASSWORD');
+$database = getenv('MYSQLDATABASE');
+$port     = getenv('MYSQLPORT');
 
 // Buat koneksi
 $conn = new mysqli($hostname, $username, $password, $database, $port);
