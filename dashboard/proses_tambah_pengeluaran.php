@@ -54,34 +54,78 @@ if (
 }
 
 // --------------------------------------
-// 4. Eksekusi Query INSERT
+// 4. Generate ID Pengeluaran (Jika Diperlukan)
 // --------------------------------------
-$sql = "INSERT INTO pengeluaran 
-        (id_event, id_kategori, keterangan, nominal, tanggal, created_by, status_pembayaran)
-        VALUES (?, ?, ?, ?, ?, ?, ?)";
+// Cek apakah id_pengeluaran AUTO_INCREMENT atau tidak
+$check_auto = $conn->query("SHOW COLUMNS FROM pengeluaran LIKE 'id_pengeluaran'");
+$column_info = $check_auto->fetch_assoc();
+$is_auto_increment = (strpos($column_info['Extra'], 'auto_increment') !== false);
 
-$stmt = $conn->prepare($sql);
-
-if (!$stmt) {
-    die("❌ Prepare gagal: " . $conn->error);
+if ($is_auto_increment) {
+    // Jika AUTO_INCREMENT, tidak perlu set id_pengeluaran
+    $sql = "INSERT INTO pengeluaran 
+            (id_event, id_kategori, keterangan, nominal, tanggal, created_by, status_pembayaran)
+            VALUES (?, ?, ?, ?, ?, ?, ?)";
+    
+    $stmt = $conn->prepare($sql);
+    
+    if (!$stmt) {
+        die("❌ Prepare gagal: " . $conn->error);
+    }
+    
+    $stmt->bind_param(
+        "iisdsis",
+        $id_event,
+        $id_kategori,
+        $keterangan_db,
+        $nominal_total,
+        $tanggal_pengeluaran,
+        $created_by,
+        $status_pembayaran
+    );
+} else {
+    // Jika TIDAK AUTO_INCREMENT, generate ID manual
+    $result = $conn->query("SELECT COALESCE(MAX(id_pengeluaran), 0) + 1 AS next_id FROM pengeluaran");
+    $row = $result->fetch_assoc();
+    $next_id = $row['next_id'];
+    
+    $sql = "INSERT INTO pengeluaran 
+            (id_pengeluaran, id_event, id_kategori, keterangan, nominal, tanggal, created_by, status_pembayaran)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    
+    $stmt = $conn->prepare($sql);
+    
+    if (!$stmt) {
+        die("❌ Prepare gagal: " . $conn->error);
+    }
+    
+    $stmt->bind_param(
+        "iiisdsis",
+        $next_id,
+        $id_event,
+        $id_kategori,
+        $keterangan_db,
+        $nominal_total,
+        $tanggal_pengeluaran,
+        $created_by,
+        $status_pembayaran
+    );
 }
 
-$stmt->bind_param(
-    "iisdsis",
-    $id_event,
-    $id_kategori,
-    $keterangan_db,
-    $nominal_total,
-    $tanggal_pengeluaran,
-    $created_by,
-    $status_pembayaran
-);
-
+// --------------------------------------
+// 5. Eksekusi Query INSERT
+// --------------------------------------
 if ($stmt->execute()) {
     header("Location: detail_pengeluaran.php?event_id=$id_event&status=success&pesan=" . urlencode("Pengeluaran berhasil ditambahkan."));
     exit();
 } else {
-    die("❌ Eksekusi gagal: " . $stmt->error);
+    $error_msg = $stmt->error;
+    $stmt->close();
+    $conn->close();
+    
+    // Redirect dengan pesan error
+    header("Location: tambah-pengeluaran.php?event_id=$id_event&status=error&pesan=" . urlencode("Gagal menambahkan pengeluaran: " . $error_msg));
+    exit();
 }
 
 $stmt->close();
