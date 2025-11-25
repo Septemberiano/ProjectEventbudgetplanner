@@ -7,7 +7,6 @@ redirectIfLoggedIn();
 $error = '';
 $success = '';
 
-
 $nama = '';
 $username = '';
 $email = '';
@@ -31,8 +30,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
          $error = "Format email tidak valid.";
     } else {
         
+        // Cek apakah username/email sudah dipakai
         $stmt = $conn->prepare("SELECT id_user FROM users WHERE username = ? OR email = ?");
-        
         $stmt->bind_param("ss", $username, $email);
         $stmt->execute();
         $stmt->store_result();
@@ -41,22 +40,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $error = "Username atau Email sudah terdaftar.";
         } else {
             
-            // 1. HASH PASSWORD (AMAN UNTUK LOGIN)
+            // HASH PASSWORD (AMAN)
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-            
-            // 2. SIMPAN PASSWORD MENTAH (UNSAFE, HANYA UNTUK DEBUGGING)
-            $debug_password = $password; 
 
-            
-            // 3. QUERY INSERT DENGAN debug_password
-            $stmt = $conn->prepare("INSERT INTO users (nama, username, email, password, debug_password) VALUES (?, ?, ?, ?, ?)");
-            // Perhatian: Tambahkan 's' di bind_param untuk debug_password
-            $stmt->bind_param("sssss", $nama, $username, $email, $hashed_password, $debug_password);
+            // INSERT DATA TANPA debug_password
+            $stmt = $conn->prepare("INSERT INTO users (nama, username, email, password) 
+                                    VALUES (?, ?, ?, ?)");
+            $stmt->bind_param("ssss", $nama, $username, $email, $hashed_password);
 
             if ($stmt->execute()) {
                 $success = "Pendaftaran berhasil! Silakan Login.";
             
-                $nama = $username = $email = ''; 
+                // Reset form
+                $nama = $username = $email = '';
             } else {
                 $error = "Terjadi kesalahan saat pendaftaran: " . $conn->error;
             }
@@ -101,13 +97,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <input type="text" class="form-control" id="name" name="name" placeholder="Full Name" value="<?= $nama ?>" required>
                     </div>
                 </div>
-                 <div class="mb-4">
+
+                <div class="mb-4">
                     <label for="username" class="form-label visually-hidden">Username</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-at"></i></span>
                         <input type="text" class="form-control" id="username" name="username" placeholder="Username" value="<?= $username ?>" required>
                     </div>
                 </div>
+
                 <div class="mb-4">
                     <label for="email" class="form-label visually-hidden">Email</label>
                     <div class="input-group">
@@ -142,6 +140,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </form>
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous"></script> 
 </body>
